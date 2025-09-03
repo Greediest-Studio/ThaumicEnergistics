@@ -13,11 +13,27 @@ item.thaumicenergistics.essentia_component_1k.name=1k-ME源质储存组件
 item.thaumicenergistics.essentia_component_4k.name=4k-ME源质储存组件
 item.thaumicenergistics.essentia_component_16k.name=16k-ME源质储存组件
 item.thaumicenergistics.essentia_component_64k.name=64k-ME源质储存组件
+item.thaumicenergistics.essentia_component_256k.name=256k-ME源质储存组件
+item.thaumicenergistics.essentia_component_1m.name=1M-ME源质储存组件
+item.thaumicenergistics.essentia_component_4m.name=4M-ME源质储存组件
+item.thaumicenergistics.essentia_component_16m.name=16M-ME源质储存组件
+item.thaumicenergistics.essentia_component_64m.name=64M-ME源质储存组件
+item.thaumicenergistics.essentia_component_256m.name=256M-ME源质储存组件
+item.thaumicenergistics.essentia_component_1g.name=1G-ME源质储存组件
+item.thaumicenergistics.essentia_component_2g.name=2G-ME源质储存组件
 
 item.thaumicenergistics.essentia_cell_1k.name=1k-ME源质储存元件
 item.thaumicenergistics.essentia_cell_4k.name=4k-ME源质储存元件
 item.thaumicenergistics.essentia_cell_16k.name=16k-ME源质储存元件
 item.thaumicenergistics.essentia_cell_64k.name=64k-ME源质储存元件
+item.thaumicenergistics.essentia_cell_256k.name=256k-ME源质储存元件
+item.thaumicenergistics.essentia_cell_1m.name=1M-ME源质储存元件
+item.thaumicenergistics.essentia_cell_4m.name=4M-ME源质储存元件
+item.thaumicenergistics.essentia_cell_16m.name=16M-ME源质储存元件
+item.thaumicenergistics.essentia_cell_64m.name=64M-ME源质储存元件
+item.thaumicenergistics.essentia_cell_256m.name=256M-ME源质储存元件
+item.thaumicenergistics.essentia_cell_1g.name=1G-ME源质储存元件
+item.thaumicenergistics.essentia_cell_2g.name=2G-ME源质储存元件
 item.thaumicenergistics.essentia_cell_creative.name=创造ME源质储存元件
 
 item.thaumicenergistics.essentia_import.name=ME源质输入总线

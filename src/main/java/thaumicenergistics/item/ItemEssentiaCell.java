@@ -97,7 +97,8 @@ public class ItemEssentiaCell extends ItemBase implements IStorageCell<IAEEssent
         Preconditions.checkNotNull(stack.getItem());
         Preconditions.checkNotNull(stack.getItem().getRegistryName());
         Preconditions.checkNotNull(stack.getItem().getRegistryName().getPath());
-        switch (stack.getItem().getRegistryName().getPath().split("_")[2]) {
+        String size = stack.getItem().getRegistryName().getPath().split("_")[2];
+        switch (size) {
             case "1k":
                 return ThEApi.instance().items().essentiaComponent1k().maybeStack(1);
             case "4k":
@@ -106,6 +107,17 @@ public class ItemEssentiaCell extends ItemBase implements IStorageCell<IAEEssent
                 return ThEApi.instance().items().essentiaComponent16k().maybeStack(1);
             case "64k":
                 return ThEApi.instance().items().essentiaComponent64k().maybeStack(1);
+            case "256k":
+            case "1m":
+            case "4m":
+            case "16m":
+            case "64m":
+            case "256m":
+            case "1g":
+            case "2g": {
+                net.minecraft.item.Item item = net.minecraft.item.Item.getByNameOrId("thaumicenergistics:essentia_component_" + size);
+                return item != null ? Optional.of(new ItemStack(item)) : Optional.empty();
+            }
             default:
                 return Optional.empty();
         }

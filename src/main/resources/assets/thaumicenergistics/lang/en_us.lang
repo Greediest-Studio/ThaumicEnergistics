@@ -13,11 +13,27 @@ item.thaumicenergistics.essentia_component_1k.name=1k ME Essentia Storage Compon
 item.thaumicenergistics.essentia_component_4k.name=4k ME Essentia Storage Component
 item.thaumicenergistics.essentia_component_16k.name=16k ME Essentia Storage Component
 item.thaumicenergistics.essentia_component_64k.name=64k ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_256k.name=256k ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_1m.name=1m ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_4m.name=4m ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_16m.name=16m ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_64m.name=64m ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_256m.name=256m ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_1g.name=1g ME Essentia Storage Component
+item.thaumicenergistics.essentia_component_2g.name=2g ME Essentia Storage Component
 
 item.thaumicenergistics.essentia_cell_1k.name=1k ME Essentia Storage Cell
 item.thaumicenergistics.essentia_cell_4k.name=4k ME Essentia Storage Cell
 item.thaumicenergistics.essentia_cell_16k.name=16k ME Essentia Storage Cell
 item.thaumicenergistics.essentia_cell_64k.name=64k ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_256k.name=256k ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_1m.name=1m ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_4m.name=4m ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_16m.name=16m ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_64m.name=64m ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_256m.name=256m ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_1g.name=1g ME Essentia Storage Cell
+item.thaumicenergistics.essentia_cell_2g.name=2g ME Essentia Storage Cell
 item.thaumicenergistics.essentia_cell_creative.name=Creative ME Essentia Storage Cell
 
 item.thaumicenergistics.essentia_import.name=ME Essentia Import Bus
