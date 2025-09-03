@@ -13,6 +13,7 @@ target
 .mvn/
 .gradle
 build/
+bin/
 
 # Minecraft
 run/
