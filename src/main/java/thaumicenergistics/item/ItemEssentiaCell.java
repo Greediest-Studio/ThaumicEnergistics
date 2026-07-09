@@ -1,5 +1,7 @@
 package thaumicenergistics.item;
 
+import additions.AdditionalEssentiaComponents;
+
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
@@ -115,19 +117,8 @@ public class ItemEssentiaCell extends ItemBase
                 return ThEApi.instance().items().essentiaComponent16k().maybeStack(1);
             case "64k":
                 return ThEApi.instance().items().essentiaComponent64k().maybeStack(1);
-            case "256k":
-            case "1m":
-            case "4m":
-            case "16m":
-            case "64m":
-            case "256m":
-            case "1g":
-            case "2g": {
-                net.minecraft.item.Item item = net.minecraft.item.Item.getByNameOrId("thaumicenergistics:essentia_component_" + size);
-                return item != null ? Optional.of(new ItemStack(item)) : Optional.empty();
-            }
             default:
-                return Optional.empty();
+                return AdditionalEssentiaComponents.getComponentStack(size);
         }
     }
 

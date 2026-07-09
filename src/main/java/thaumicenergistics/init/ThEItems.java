@@ -2,6 +2,7 @@ package thaumicenergistics.init;
 
 import additions.AdditionalEssentiaCells;
 import additions.AdditionalEssentiaComponents;
+
 import appeng.api.definitions.IItemDefinition;
 
 import net.minecraft.item.Item;

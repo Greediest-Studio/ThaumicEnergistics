@@ -34,6 +34,15 @@ java {
     // withJavadocJar()
 }
 
+sourceSets {
+    main {
+        resources {
+            setSrcDirs(listOf("src/main/resources/additions", "src/main/resources"))
+            exclude("additions/**")
+        }
+    }
+}
+
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
     options.isFork = true
@@ -236,6 +245,8 @@ if (projectProperty("useAccessTransformer")) {
 }
 
 tasks.withType<ProcessResources> {
+    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+
     val modVersionValue = project.version
     val mcVersionValue = project.minecraft.mcVersion
 
@@ -265,6 +276,8 @@ tasks.register<Jar>("apiJar") {
 }
 
 tasks.withType<Jar> {
+    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+
     manifest {
         val attributes = mutableMapOf<String, Any>()
         if (projectProperty("useCoreMod")) {
