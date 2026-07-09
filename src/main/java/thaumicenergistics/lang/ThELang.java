@@ -24,8 +24,10 @@ public class ThELang implements IThELang {
     private final IThELangKey itemEssentiaImportBus;
     private final IThELangKey itemEssentiaExportBus;
     private final IThELangKey itemEssentiaStorageBus;
+    private final IThELangKey itemEssentiaLevelEmitter;
     private final IThELangKey itemEssentiaTerminal;
     private final IThELangKey itemArcaneTerminal;
+    private final IThELangKey itemWirelessEssentiaTerminal;
     private final IThELangKey itemArcaneChargingUpgrade;
     private final IThELangKey itemKnowledgeCore;
     private final IThELangKey itemBlankKnowledgeCore;
@@ -33,6 +35,13 @@ public class ThELang implements IThELang {
     private final IThELangKey deviceOnline;
     private final IThELangKey deviceOffline;
     private final IThELangKey deviceMissingChannel;
+    private final IThELangKey deviceNotLinked;
+    private final IThELangKey deviceStationNotFound;
+    private final IThELangKey deviceNotPowered;
+    private final IThELangKey deviceOutOfRange;
+    private final IThELangKey deviceLinked;
+    private final IThELangKey deviceUnlinked;
+    private final IThELangKey storedEnergy;
     private final IThELangKey arcaneAssemblerIdle;
     private final IThELangKey arcaneAssemblerPrep;
     private final IThELangKey arcaneAssemblerBusy;
@@ -42,6 +51,7 @@ public class ThELang implements IThELang {
     private final IThELangKey guiEssentiaImportBus;
     private final IThELangKey guiEssentiaExportBus;
     private final IThELangKey guiEssentiaStorageBus;
+    private final IThELangKey guiEssentiaLevelEmitter;
     private final IThELangKey guiEssentiaTerminal;
     private final IThELangKey guiArcaneTerminal;
     private final IThELangKey guiArcaneInscriber;
@@ -61,16 +71,21 @@ public class ThELang implements IThELang {
     public ThELang() {
         this.creativeTab = new ThELangKey("itemGroup.ThaumicEnergistics");
 
-        this.tileInfusionProvider = new ThELangKey("tile.thaumicenergistics.infusion_provider.name");
+        this.tileInfusionProvider =
+                new ThELangKey("tile.thaumicenergistics.infusion_provider.name");
         this.tileArcaneAssembler = new ThELangKey("tile.thaumicenergistics.arcane_assembler.name");
 
         this.itemDiffusionCore = new ThELangKey("item.thaumicenergistics.diffusion_core.name");
         this.itemCoalescenceCore = new ThELangKey("item.thaumicenergistics.coalescence_core.name");
 
-        this.itemEssentia1kComponent = new ThELangKey("item.thaumicenergistics.essentia_component_1k.name");
-        this.itemEssentia4kComponent = new ThELangKey("item.thaumicenergistics.essentia_component_4k.name");
-        this.itemEssentia16kComponent = new ThELangKey("item.thaumicenergistics.essentia_component_16k.name");
-        this.itemEssentia64kComponent = new ThELangKey("item.thaumicenergistics.essentia_component_64k.name");
+        this.itemEssentia1kComponent =
+                new ThELangKey("item.thaumicenergistics.essentia_component_1k.name");
+        this.itemEssentia4kComponent =
+                new ThELangKey("item.thaumicenergistics.essentia_component_4k.name");
+        this.itemEssentia16kComponent =
+                new ThELangKey("item.thaumicenergistics.essentia_component_16k.name");
+        this.itemEssentia64kComponent =
+                new ThELangKey("item.thaumicenergistics.essentia_component_64k.name");
 
         this.itemEssentia1kCell = new ThELangKey("item.thaumicenergistics.essentia_cell_1k.name");
         this.itemEssentia4kCell = new ThELangKey("item.thaumicenergistics.essentia_cell_4k.name");
@@ -79,28 +94,53 @@ public class ThELang implements IThELang {
 
         this.itemEssentiaImportBus = new ThELangKey("item.thaumicenergistics.essentia_import.name");
         this.itemEssentiaExportBus = new ThELangKey("item.thaumicenergistics.essentia_export.name");
-        this.itemEssentiaStorageBus = new ThELangKey("item.thaumicenergistics.essentia_storage.name");
-        this.itemEssentiaTerminal = new ThELangKey("item.thaumicenergistics.essentia_terminal.name");
+        this.itemEssentiaStorageBus =
+                new ThELangKey("item.thaumicenergistics.essentia_storage.name");
+        this.itemEssentiaLevelEmitter =
+                new ThELangKey("item.thaumicenergistics.essentia_level_emitter.name");
+        this.itemEssentiaTerminal =
+                new ThELangKey("item.thaumicenergistics.essentia_terminal.name");
         this.itemArcaneTerminal = new ThELangKey("item.thaumicenergistics.arcane_terminal.name");
+        this.itemWirelessEssentiaTerminal =
+                new ThELangKey("item.thaumicenergistics.wireless_essentia_terminal.name");
 
-        this.itemArcaneChargingUpgrade = new ThELangKey("item.thaumicenergistics.upgrade_arcane.name");
+        this.itemArcaneChargingUpgrade =
+                new ThELangKey("item.thaumicenergistics.upgrade_arcane.name");
         this.itemKnowledgeCore = new ThELangKey("item.thaumicenergistics.knowledge_core.name");
-        this.itemBlankKnowledgeCore = new ThELangKey("item.thaumicenergistics.blank_knowledge_core.name");
+        this.itemBlankKnowledgeCore =
+                new ThELangKey("item.thaumicenergistics.blank_knowledge_core.name");
 
         this.tooltipWIP = new ThELangKey("tooltip.thaumicenergistics.wip");
         this.deviceOnline = new ThELangKey("tooltip.thaumicenergistics.device_online");
         this.deviceOffline = new ThELangKey("tooltip.thaumicenergistics.device_offline");
-        this.deviceMissingChannel = new ThELangKey("tooltip.thaumicenergistics.device_missing_channel");
-        this.arcaneAssemblerIdle = new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.idle");
-        this.arcaneAssemblerPrep = new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.prep");
-        this.arcaneAssemblerBusy = new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.busy");
-        this.arcaneAssemblerProgress = new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.progress");
-        this.arcaneAssemblerNoAspect = new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.no_aspect");
-        this.arcaneAssemblerNoVis = new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.no_vis");
+        this.deviceMissingChannel =
+                new ThELangKey("tooltip.thaumicenergistics.device_missing_channel");
+        this.deviceNotLinked = new ThELangKey("tooltip.thaumicenergistics.device_not_linked");
+        this.deviceStationNotFound =
+                new ThELangKey("tooltip.thaumicenergistics.device_station_not_found");
+        this.deviceNotPowered = new ThELangKey("tooltip.thaumicenergistics.device_not_powered");
+        this.deviceOutOfRange = new ThELangKey("tooltip.thaumicenergistics.device_out_of_range");
+        this.deviceLinked = new ThELangKey("tooltip.thaumicenergistics.device_linked");
+        this.deviceUnlinked = new ThELangKey("tooltip.thaumicenergistics.device_unlinked");
+        this.storedEnergy = new ThELangKey("tooltip.thaumicenergistics.stored_energy");
+        this.arcaneAssemblerIdle =
+                new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.idle");
+        this.arcaneAssemblerPrep =
+                new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.prep");
+        this.arcaneAssemblerBusy =
+                new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.busy");
+        this.arcaneAssemblerProgress =
+                new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.progress");
+        this.arcaneAssemblerNoAspect =
+                new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.no_aspect");
+        this.arcaneAssemblerNoVis =
+                new ThELangKey("tooltip.thaumicenergistics.arcane_assembler.no_vis");
 
         this.guiEssentiaImportBus = new ThELangKey("gui.thaumicenergistics.essentia_import_bus");
         this.guiEssentiaExportBus = new ThELangKey("gui.thaumicenergistics.essentia_export_bus");
         this.guiEssentiaStorageBus = new ThELangKey("gui.thaumicenergistics.essentia_storage_bus");
+        this.guiEssentiaLevelEmitter =
+                new ThELangKey("gui.thaumicenergistics.essentia_level_emitter");
         this.guiEssentiaTerminal = new ThELangKey("gui.thaumicenergistics.essentia_terminal");
         this.guiArcaneTerminal = new ThELangKey("gui.thaumicenergistics.arcane_terminal");
         this.guiArcaneInscriber = new ThELangKey("gui.thaumicenergistics.arcane_inscriber");
@@ -110,9 +150,12 @@ public class ThELang implements IThELang {
         this.guiVisAvailable = new ThELangKey("gui.thaumicenergistics.vis_available");
         this.guiVisDiscount = new ThELangKey("gui.thaumicenergistics.vis_discount");
 
-        this.guiInsertKnowledgeCore = new ThELangKey("gui.thaumicenergistics.insert_knowledge_core");
-        this.guiKnowledgeCoreBlank = new ThELangKey("gui.thaumicenergistics.knowledge_core_is_blank");
-        this.guiRecipeAlreadyStored = new ThELangKey("gui.thaumicenergistics.recipe_already_stored");
+        this.guiInsertKnowledgeCore =
+                new ThELangKey("gui.thaumicenergistics.insert_knowledge_core");
+        this.guiKnowledgeCoreBlank =
+                new ThELangKey("gui.thaumicenergistics.knowledge_core_is_blank");
+        this.guiRecipeAlreadyStored =
+                new ThELangKey("gui.thaumicenergistics.recipe_already_stored");
         this.guiRecipeNotArcane = new ThELangKey("gui.thaumicenergistics.recipe_not_arcane");
         this.guiNoRecipe = new ThELangKey("gui.thaumicenergistics.no_recipe");
 
@@ -203,6 +246,11 @@ public class ThELang implements IThELang {
     }
 
     @Override
+    public IThELangKey itemEssentiaLevelEmitter() {
+        return this.itemEssentiaLevelEmitter;
+    }
+
+    @Override
     public IThELangKey itemEssentiaTerminal() {
         return this.itemEssentiaTerminal;
     }
@@ -210,6 +258,11 @@ public class ThELang implements IThELang {
     @Override
     public IThELangKey itemArcaneTerminal() {
         return this.itemArcaneTerminal;
+    }
+
+    @Override
+    public IThELangKey itemWirelessEssentiaTerminal() {
+        return this.itemWirelessEssentiaTerminal;
     }
 
     @Override
@@ -245,6 +298,41 @@ public class ThELang implements IThELang {
     @Override
     public IThELangKey deviceMissingChannel() {
         return this.deviceMissingChannel;
+    }
+
+    @Override
+    public IThELangKey deviceNotLinked() {
+        return this.deviceNotLinked;
+    }
+
+    @Override
+    public IThELangKey deviceStationNotFound() {
+        return this.deviceStationNotFound;
+    }
+
+    @Override
+    public IThELangKey deviceNotPowered() {
+        return this.deviceNotPowered;
+    }
+
+    @Override
+    public IThELangKey deviceOutOfRange() {
+        return this.deviceOutOfRange;
+    }
+
+    @Override
+    public IThELangKey deviceLinked() {
+        return this.deviceLinked;
+    }
+
+    @Override
+    public IThELangKey deviceUnlinked() {
+        return this.deviceUnlinked;
+    }
+
+    @Override
+    public IThELangKey storedEnergy() {
+        return this.storedEnergy;
     }
 
     @Override
@@ -290,6 +378,11 @@ public class ThELang implements IThELang {
     @Override
     public IThELangKey guiEssentiaStorageBus() {
         return this.guiEssentiaStorageBus;
+    }
+
+    @Override
+    public IThELangKey guiEssentiaLevelEmitter() {
+        return this.guiEssentiaLevelEmitter;
     }
 
     @Override

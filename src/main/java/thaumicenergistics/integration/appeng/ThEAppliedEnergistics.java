@@ -2,12 +2,17 @@ package thaumicenergistics.integration.appeng;
 
 import appeng.api.AEApi;
 import appeng.api.config.Upgrades;
+import appeng.api.features.IWirelessTermHandler;
 import appeng.api.storage.data.IItemList;
+
 import io.netty.buffer.ByteBuf;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
 import thaumcraft.api.aspects.Aspect;
+
 import thaumicenergistics.api.EssentiaStack;
 import thaumicenergistics.api.ThEApi;
 import thaumicenergistics.api.storage.IAEEssentiaStack;
@@ -26,33 +31,60 @@ public class ThEAppliedEnergistics implements IThEIntegration {
 
     @Override
     public void preInit() {
-        AEApi.instance().storage().registerStorageChannel(IEssentiaStorageChannel.class, new EssentiaStorageChannel());
+        AEApi.instance()
+                .storage()
+                .registerStorageChannel(
+                        IEssentiaStorageChannel.class, new EssentiaStorageChannel());
     }
 
     @Override
     public void init() {
         AEApi.instance().registries().cell().addCellHandler(new CreativeEssentiaCellHandler());
 
-        ThEApi.instance().items().essentiaImportBus().maybeStack(1).ifPresent(stack -> {
-            Upgrades.REDSTONE.registerItem(stack, 1);
-            Upgrades.CAPACITY.registerItem(stack, 2);
-            Upgrades.SPEED.registerItem(stack, 4);
-        });
-        ThEApi.instance().items().essentiaExportBus().maybeStack(1).ifPresent(stack -> {
-            Upgrades.REDSTONE.registerItem(stack, 1);
-            Upgrades.CAPACITY.registerItem(stack, 2);
-            Upgrades.SPEED.registerItem(stack, 4);
-        });
-        ThEApi.instance().items().essentiaStorageBus().maybeStack(1).ifPresent(stack -> {
-            Upgrades.INVERTER.registerItem(stack, 1);
-            Upgrades.CAPACITY.registerItem(stack, 5);
-        });
+        ThEApi.instance()
+                .items()
+                .wirelessEssentiaTerminal()
+                .maybeItem()
+                .ifPresent(
+                        item ->
+                                AEApi.instance()
+                                        .registries()
+                                        .wireless()
+                                        .registerWirelessHandler((IWirelessTermHandler) item));
+
+        ThEApi.instance()
+                .items()
+                .essentiaImportBus()
+                .maybeStack(1)
+                .ifPresent(
+                        stack -> {
+                            Upgrades.REDSTONE.registerItem(stack, 1);
+                            Upgrades.CAPACITY.registerItem(stack, 2);
+                            Upgrades.SPEED.registerItem(stack, 4);
+                        });
+        ThEApi.instance()
+                .items()
+                .essentiaExportBus()
+                .maybeStack(1)
+                .ifPresent(
+                        stack -> {
+                            Upgrades.REDSTONE.registerItem(stack, 1);
+                            Upgrades.CAPACITY.registerItem(stack, 2);
+                            Upgrades.SPEED.registerItem(stack, 4);
+                        });
+        ThEApi.instance()
+                .items()
+                .essentiaStorageBus()
+                .maybeStack(1)
+                .ifPresent(
+                        stack -> {
+                            Upgrades.INVERTER.registerItem(stack, 1);
+                            Upgrades.CAPACITY.registerItem(stack, 5);
+                        });
     }
 
     @Override
-    public void postInit() {
-
-    }
+    public void postInit() {}
 
     public static class EssentiaStorageChannel implements IEssentiaStorageChannel {
 
@@ -79,7 +111,8 @@ public class ThEAppliedEnergistics implements IThEIntegration {
 
                 ItemDummyAspect dummyAspect = (ItemDummyAspect) item;
 
-                return this.createStack(new EssentiaStack(dummyAspect.getAspect(itemStack), Integer.MAX_VALUE));
+                return this.createStack(
+                        new EssentiaStack(dummyAspect.getAspect(itemStack), Integer.MAX_VALUE));
             } else if (o instanceof EssentiaStack) {
                 return AEEssentiaStack.fromEssentiaStack((EssentiaStack) o);
             } else if (o instanceof AEEssentiaStack) {

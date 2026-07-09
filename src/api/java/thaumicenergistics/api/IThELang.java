@@ -40,9 +40,13 @@ public interface IThELang {
 
     IThELangKey itemEssentiaStorageBus();
 
+    IThELangKey itemEssentiaLevelEmitter();
+
     IThELangKey itemEssentiaTerminal();
 
     IThELangKey itemArcaneTerminal();
+
+    IThELangKey itemWirelessEssentiaTerminal();
 
     IThELangKey itemArcaneChargingUpgrade();
 
@@ -57,6 +61,20 @@ public interface IThELang {
     IThELangKey deviceOffline();
 
     IThELangKey deviceMissingChannel();
+
+    IThELangKey deviceNotLinked();
+
+    IThELangKey deviceStationNotFound();
+
+    IThELangKey deviceNotPowered();
+
+    IThELangKey deviceOutOfRange();
+
+    IThELangKey deviceLinked();
+
+    IThELangKey deviceUnlinked();
+
+    IThELangKey storedEnergy();
 
     IThELangKey arcaneAssemblerIdle();
 
@@ -75,6 +93,8 @@ public interface IThELang {
     IThELangKey guiEssentiaExportBus();
 
     IThELangKey guiEssentiaStorageBus();
+
+    IThELangKey guiEssentiaLevelEmitter();
 
     IThELangKey guiEssentiaTerminal();
 

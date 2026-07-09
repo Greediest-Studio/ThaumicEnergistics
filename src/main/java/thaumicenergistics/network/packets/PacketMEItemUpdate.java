@@ -2,13 +2,16 @@ package thaumicenergistics.network.packets;
 
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
 import thaumicenergistics.client.gui.part.GuiArcaneInscriber;
 import thaumicenergistics.client.gui.part.GuiArcaneTerminal;
 import thaumicenergistics.util.ThELog;
@@ -25,7 +28,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * @author BrockWS
  */
-public class PacketMEItemUpdate implements IMessage {
+public class PacketMEItemUpdate implements IMessage, IStackUpdatePacket<IAEItemStack> {
 
     private static final int UNCOMPRESSED_PACKET_BYTE_LIMIT = 16 * 1024 * 1024;
     private static final int OPERATION_BYTE_LIMIT = 2 * 1024;
@@ -44,31 +47,35 @@ public class PacketMEItemUpdate implements IMessage {
         this.list = new ArrayList<>();
 
         this.data = Unpooled.buffer(OPERATION_BYTE_LIMIT);
-        compressFrame = new GZIPOutputStream(new OutputStream() {
-            @Override
-            public void write(int value) {
-                data.writeByte(value);
-            }
-        });
+        compressFrame =
+                new GZIPOutputStream(
+                        new OutputStream() {
+                            @Override
+                            public void write(int value) {
+                                data.writeByte(value);
+                            }
+                        });
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-//        ThELog.info("fromBytes Readable Bytes : " + buf.readableBytes());
-//        ThELog.info("fromBytes isReadable : " + buf.isReadable());
+        //        ThELog.info("fromBytes Readable Bytes : " + buf.readableBytes());
+        //        ThELog.info("fromBytes isReadable : " + buf.isReadable());
         if (!buf.isReadable()) {
             return;
         }
-        try (GZIPInputStream gzReader = new GZIPInputStream(new InputStream() {
-            @Override
-            public int read() throws IOException {
-                if (buf.readableBytes() <= 0) {
-                    return -1;
-                }
+        try (GZIPInputStream gzReader =
+                new GZIPInputStream(
+                        new InputStream() {
+                            @Override
+                            public int read() throws IOException {
+                                if (buf.readableBytes() <= 0) {
+                                    return -1;
+                                }
 
-                return buf.readByte() & 0xff;
-            }
-        })) {
+                                return buf.readByte() & 0xff;
+                            }
+                        })) {
             ByteBuf uncompressed = Unpooled.buffer(buf.readableBytes());
             byte[] tmp = new byte[TEMP_BUFFER_SIZE];
             while (gzReader.available() != 0) {
@@ -96,15 +103,17 @@ public class PacketMEItemUpdate implements IMessage {
             compressFrame.close();
             data.capacity(data.readableBytes());
             if (data.array().length > 2 * 1024 * 1024) {
-                throw new IllegalArgumentException("Sorry, ThE made a " + data.array().length + " byte packet by accident!");
+                throw new IllegalArgumentException(
+                        "Sorry, ThE made a " + data.array().length + " byte packet by accident!");
             }
-//            ThELog.info("toBytes Readable Bytes : " + data.readableBytes());
+            //            ThELog.info("toBytes Readable Bytes : " + data.readableBytes());
             buf.writeBytes(data);
         } catch (IOException e) {
             ThELog.error("toBytes IOException", e);
         }
     }
 
+    @Override
     public void appendStack(IAEItemStack stack) throws IOException, BufferOverflowException {
 
         ByteBuf tmp = Unpooled.buffer(OPERATION_BYTE_LIMIT);
@@ -124,20 +133,30 @@ public class PacketMEItemUpdate implements IMessage {
 
         @Override
         public IMessage onMessage(PacketMEItemUpdate message, MessageContext ctx) {
-            FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> {
-                if (Minecraft.getMinecraft().currentScreen instanceof GuiArcaneTerminal) {
-                    GuiArcaneTerminal gui = (GuiArcaneTerminal) Minecraft.getMinecraft().currentScreen;
-                    gui.onMEStorageUpdate(message.list);
-                }
-                if (Minecraft.getMinecraft().currentScreen instanceof GuiArcaneInscriber) {
-                    GuiArcaneInscriber gui = (GuiArcaneInscriber) Minecraft.getMinecraft().currentScreen;
-                    gui.onMEStorageUpdate(message.list);
-                }
-            });
+            FMLCommonHandler.instance()
+                    .getWorldThread(ctx.netHandler)
+                    .addScheduledTask(
+                            () -> {
+                                if (Minecraft.getMinecraft().currentScreen
+                                        instanceof GuiArcaneTerminal) {
+                                    GuiArcaneTerminal gui =
+                                            (GuiArcaneTerminal)
+                                                    Minecraft.getMinecraft().currentScreen;
+                                    gui.onMEStorageUpdate(message.list);
+                                }
+                                if (Minecraft.getMinecraft().currentScreen
+                                        instanceof GuiArcaneInscriber) {
+                                    GuiArcaneInscriber gui =
+                                            (GuiArcaneInscriber)
+                                                    Minecraft.getMinecraft().currentScreen;
+                                    gui.onMEStorageUpdate(message.list);
+                                }
+                            });
             return null;
         }
     }
 
+    @Override
     public boolean isEmpty() {
         return this.empty;
     }

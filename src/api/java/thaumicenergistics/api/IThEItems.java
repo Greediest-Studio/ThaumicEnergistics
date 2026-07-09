@@ -31,11 +31,15 @@ public interface IThEItems {
 
     IItemDefinition essentiaStorageBus();
 
+    IItemDefinition essentiaLevelEmitter();
+
     IItemDefinition essentiaTerminal();
 
     IItemDefinition arcaneTerminal();
 
     IItemDefinition arcaneInscriber();
+
+    IItemDefinition wirelessEssentiaTerminal();
 
     // Materials
 

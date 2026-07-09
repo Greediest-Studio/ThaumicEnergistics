@@ -8,6 +8,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.IConfigurableObject;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -15,15 +16,20 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.items.wrapper.PlayerMainInvWrapper;
+
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.aspects.IEssentiaContainerItem;
 import thaumcraft.common.items.consumables.ItemPhial;
+
 import thaumicenergistics.api.ThEApi;
 import thaumicenergistics.api.storage.IAEEssentiaStack;
 import thaumicenergistics.api.storage.IEssentiaStorageChannel;
 import thaumicenergistics.config.AESettings;
 import thaumicenergistics.container.ActionType;
 import thaumicenergistics.container.ContainerBaseTerminal;
+import thaumicenergistics.container.IPartContainer;
+import thaumicenergistics.container.ThETerminalNetworkSync;
+import thaumicenergistics.integration.appeng.util.ThEActionSource;
 import thaumicenergistics.network.PacketHandler;
 import thaumicenergistics.network.packets.PacketInvHeldUpdate;
 import thaumicenergistics.network.packets.PacketMEEssentiaUpdate;
@@ -38,17 +44,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author BrockWS
  */
-public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements IMEMonitorHandlerReceiver<IAEEssentiaStack>, IConfigurableObject {
+public class ContainerEssentiaTerminal extends ContainerBaseTerminal
+        implements IMEMonitorHandlerReceiver<IAEEssentiaStack>,
+                IConfigurableObject,
+                IPartContainer {
 
     private final PartEssentiaTerminal part;
+    private final IEssentiaStorageChannel channel;
+    private final IActionSource playerSource;
+    private final IItemList<IAEEssentiaStack> items =
+            AEApi.instance()
+                    .storage()
+                    .getStorageChannel(IEssentiaStorageChannel.class)
+                    .createList();
+    private final ThETerminalNetworkSync<IAEEssentiaStack, PacketMEEssentiaUpdate> networkSync =
+            new ThETerminalNetworkSync<>(PacketMEEssentiaUpdate::new);
     private IMEMonitor<IAEEssentiaStack> monitor;
+    private boolean isValidContainer = true;
 
     public ContainerEssentiaTerminal(EntityPlayer player, PartEssentiaTerminal part) {
         super(player, part);
         this.part = part;
+        this.playerSource = new ThEActionSource(player);
+        this.channel = AEApi.instance().storage().getStorageChannel(IEssentiaStorageChannel.class);
 
         if (ForgeUtil.isServer()) {
-            this.monitor = this.part.getInventory(AEApi.instance().storage().getStorageChannel(IEssentiaStorageChannel.class));
+            this.monitor = this.part.getInventory(this.channel);
             if (this.monitor != null) {
                 this.monitor.addListener(this, null);
             }
@@ -70,22 +91,29 @@ public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements 
     @Override
     public void onAction(EntityPlayerMP player, PacketUIAction packet) {
         InventoryPlayer inv = player.inventory;
-        if (packet.action == ActionType.FILL_ESSENTIA_ITEM && packet.requestedStack instanceof IAEEssentiaStack) {
-            IAEEssentiaStack requestedStack = (IAEEssentiaStack) packet.requestedStack;
+        IAEEssentiaStack requestedStack = (IAEEssentiaStack) packet.getStack(this.channel);
+        if (packet.action == ActionType.FILL_ESSENTIA_ITEM && requestedStack != null) {
             ItemStack toFill = inv.getItemStack().copy();
             ResourceLocation registryName = toFill.getItem().getRegistryName();
-            if (toFill.isEmpty() || !(toFill.getItem() instanceof IEssentiaContainerItem) || registryName == null)
-                return;
+            if (toFill.isEmpty()
+                    || !(toFill.getItem() instanceof IEssentiaContainerItem)
+                    || registryName == null) return;
             toFill.setCount(1);
 
             IEssentiaContainerItem containerItem = (IEssentiaContainerItem) toFill.getItem();
-            int max = ThEApi.instance().config().essentiaContainerCapacity().getOrDefault(registryName.toString(), 0);
-            if (max < 1 || (containerItem.getAspects(toFill) != null && containerItem.getAspects(toFill).size() > 0))
-                return;
+            int max =
+                    ThEApi.instance()
+                            .config()
+                            .essentiaContainerCapacity()
+                            .getOrDefault(registryName.toString(), 0);
+            if (max < 1
+                    || (containerItem.getAspects(toFill) != null
+                            && containerItem.getAspects(toFill).size() > 0)) return;
 
-            IAEEssentiaStack stack = this.monitor.extractItems(requestedStack, Actionable.SIMULATE, this.part.source);
-            if (stack == null || stack.getStackSize() < max)
-                return;
+            IAEEssentiaStack stack =
+                    this.monitor.extractItems(
+                            requestedStack, Actionable.SIMULATE, this.playerSource);
+            if (stack == null || stack.getStackSize() < max) return;
             stack.setStackSize(max);
             containerItem.setAspects(toFill, new AspectList().add(stack.getAspect(), max));
             if (toFill.getItem() instanceof ItemPhial) {
@@ -106,31 +134,39 @@ public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements 
                 PacketHandler.sendToPlayer(player, new PacketInvHeldUpdate(toFill));
             }
             if (filledItem)
-                this.monitor.extractItems(stack, Actionable.MODULATE, this.part.source);
+                this.monitor.extractItems(stack, Actionable.MODULATE, this.playerSource);
         } else if (packet.action == ActionType.EMPTY_ESSENTIA_ITEM) {
             ItemStack toEmpty = inv.getItemStack().copy();
             ResourceLocation registryName = toEmpty.getItem().getRegistryName();
-            if (toEmpty.isEmpty() || !(toEmpty.getItem() instanceof IEssentiaContainerItem) || registryName == null)
-                return;
+            if (toEmpty.isEmpty()
+                    || !(toEmpty.getItem() instanceof IEssentiaContainerItem)
+                    || registryName == null) return;
             IEssentiaContainerItem containerItem = (IEssentiaContainerItem) toEmpty.getItem();
             AspectList list = containerItem.getAspects(toEmpty);
-            if (list == null || list.size() < 1 || ThEApi.instance().config().essentiaContainerCapacity().getOrDefault(registryName.toString(), 0) < 1)
-                return;
+            if (list == null
+                    || list.size() < 1
+                    || ThEApi.instance()
+                                    .config()
+                                    .essentiaContainerCapacity()
+                                    .getOrDefault(registryName.toString(), 0)
+                            < 1) return;
             AtomicBoolean canInsert = new AtomicBoolean(true);
-            list.aspects.forEach((aspect, amount) -> {
-                IAEEssentiaStack stack = this.monitor.injectItems(AEUtil.getAEStackFromAspect(aspect, amount), Actionable.SIMULATE, this.part.source);
-                if (stack != null && stack.getStackSize() > 0)
-                    canInsert.set(false);
-            });
-            if (!canInsert.get())
-                return;
+            list.aspects.forEach(
+                    (aspect, amount) -> {
+                        IAEEssentiaStack stack =
+                                this.monitor.injectItems(
+                                        AEUtil.getAEStackFromAspect(aspect, amount),
+                                        Actionable.SIMULATE,
+                                        this.playerSource);
+                        if (stack != null && stack.getStackSize() > 0) canInsert.set(false);
+                    });
+            if (!canInsert.get()) return;
 
             if (toEmpty.getCount() > 1) {
                 toEmpty.setCount(1);
                 toEmpty.setTagCompound(null);
                 toEmpty.setItemDamage(0);
-                if (!inv.addItemStackToInventory(toEmpty))
-                    return;
+                if (!inv.addItemStackToInventory(toEmpty)) return;
                 ItemStack held = inv.getItemStack();
                 held.setCount(held.getCount() - 1);
                 inv.setItemStack(held);
@@ -141,7 +177,12 @@ public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements 
                 inv.setItemStack(toEmpty);
                 PacketHandler.sendToPlayer(player, new PacketInvHeldUpdate(toEmpty));
             }
-            list.aspects.forEach((aspect, amount) -> this.monitor.injectItems(AEUtil.getAEStackFromAspect(aspect, amount), Actionable.MODULATE, this.part.source));
+            list.aspects.forEach(
+                    (aspect, amount) ->
+                            this.monitor.injectItems(
+                                    AEUtil.getAEStackFromAspect(aspect, amount),
+                                    Actionable.MODULATE,
+                                    this.playerSource));
         }
         super.onAction(player, packet);
     }
@@ -152,9 +193,12 @@ public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements 
     }
 
     @Override
-    public void postChange(IBaseMonitor<IAEEssentiaStack> iBaseMonitor, Iterable<IAEEssentiaStack> iterable, IActionSource iActionSource) {
-        for (IContainerListener c : this.listeners) {
-            this.sendInventory(c);
+    public void postChange(
+            IBaseMonitor<IAEEssentiaStack> iBaseMonitor,
+            Iterable<IAEEssentiaStack> iterable,
+            IActionSource iActionSource) {
+        for (IAEEssentiaStack stack : iterable) {
+            this.items.add(stack);
         }
     }
 
@@ -163,6 +207,36 @@ public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements 
         for (IContainerListener c : this.listeners) {
             this.sendInventory(c);
         }
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        if (ForgeUtil.isServer()) {
+            if (this.monitor != this.part.getInventory(this.channel)) {
+                // Mirrors AE2's own ContainerMEMonitorable: if the grid handed us back a different
+                // monitor instance than the one we're subscribed to (or none at all), don't try to
+                // hot-swap the subscription - just invalidate the container so canInteractWith()
+                // makes vanilla close the GUI. Reopening constructs a fresh container against
+                // whatever the current monitor is.
+                this.setValidContainer(false);
+            }
+
+            this.networkSync.sendDelta(this.items, this.monitor, this.listeners);
+        }
+        super.detectAndSendChanges();
+    }
+
+    @Override
+    public boolean canInteractWith(EntityPlayer player) {
+        return this.isValidContainer();
+    }
+
+    public boolean isValidContainer() {
+        return this.isValidContainer;
+    }
+
+    public void setValidContainer(boolean validContainer) {
+        this.isValidContainer = validContainer;
     }
 
     @Override
@@ -180,12 +254,7 @@ public class ContainerEssentiaTerminal extends ContainerBaseTerminal implements 
     }
 
     private void sendInventory(IContainerListener listener) {
-        if (ForgeUtil.isClient() || !(listener instanceof EntityPlayer) || this.monitor == null)
-            return;
-        IItemList<IAEEssentiaStack> storage = this.monitor.getStorageList();
-        PacketMEEssentiaUpdate packet = new PacketMEEssentiaUpdate();
-        for (IAEEssentiaStack stack : storage)
-            packet.appendStack(stack);
-        PacketHandler.sendToPlayer((EntityPlayerMP) listener, packet);
+        if (ForgeUtil.isClient() || this.monitor == null) return;
+        this.networkSync.sendFull(listener, this.monitor);
     }
 }
