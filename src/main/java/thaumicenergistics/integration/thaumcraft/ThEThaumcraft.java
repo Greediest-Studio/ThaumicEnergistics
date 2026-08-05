@@ -65,6 +65,8 @@ public class ThEThaumcraft implements IThEIntegration {
                 ResearchCategories.getResearchCategory("BASICS").background2);
 
         ThELog.info("Registering Research");
+        // Sync note: keep the ESSENTIAINTERFACE addendum required_research guard in
+        // research JSON unless upstream adds an equivalent fix; ungated addenda crash TC.
         ThaumcraftApi.registerResearchLocation(
                 new ResourceLocation(Reference.MOD_ID, "research/" + ModGlobals.RESEARCH_CATEGORY));
 
