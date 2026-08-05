@@ -1,26 +1,9 @@
-# Extended components and cells (untranslated)
-item.thaumicenergistics.essentia_component_256k.name=256k ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_1m.name=1m ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_4m.name=4m ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_16m.name=16m ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_64m.name=64m ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_256m.name=256m ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_1g.name=1g ME Essentia Storage Component
-item.thaumicenergistics.essentia_component_2g.name=2g ME Essentia Storage Component
-
-item.thaumicenergistics.essentia_cell_256k.name=256k ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_1m.name=1m ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_4m.name=4m ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_16m.name=16m ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_64m.name=64m ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_256m.name=256m ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_1g.name=1g ME Essentia Storage Cell
-item.thaumicenergistics.essentia_cell_2g.name=2g ME Essentia Storage Cell
 # Creative Tab
 itemGroup.ThaumicEnergistics=Thaumic Energistics
 
 # Блоки
 tile.thaumicenergistics.infusion_provider.name=Поставщик наполнения эссенции
+tile.thaumicenergistics.essentia_interface.name=Интерфейс эссенции
 
 # Предметы
 item.thaumicenergistics.diffusion_core.name=Ядро рассеивания
@@ -30,11 +13,27 @@ item.thaumicenergistics.essentia_component_1k.name=МЭ 1k компонент х
 item.thaumicenergistics.essentia_component_4k.name=МЭ 4k компонент хранения эссенции
 item.thaumicenergistics.essentia_component_16k.name=МЭ 16k компонент хранения эссенции
 item.thaumicenergistics.essentia_component_64k.name=МЭ 64k компонент хранения эссенции
+item.thaumicenergistics.essentia_component_256k.name=МЭ 256k компонент хранения эссенции
+item.thaumicenergistics.essentia_component_1m.name=МЭ 1m компонент хранения эссенции
+item.thaumicenergistics.essentia_component_4m.name=МЭ 4m компонент хранения эссенции
+item.thaumicenergistics.essentia_component_16m.name=МЭ 16m компонент хранения эссенции
+item.thaumicenergistics.essentia_component_64m.name=МЭ 64m компонент хранения эссенции
+item.thaumicenergistics.essentia_component_256m.name=МЭ 256m компонент хранения эссенции
+item.thaumicenergistics.essentia_component_1g.name=МЭ 1g компонент хранения эссенции
+item.thaumicenergistics.essentia_component_2g.name=МЭ 2g компонент хранения эссенции
 
 item.thaumicenergistics.essentia_cell_1k.name=МЭ 1k Ячейка хранения эссенции
 item.thaumicenergistics.essentia_cell_4k.name=МЭ 4k Ячейка хранения эссенции
 item.thaumicenergistics.essentia_cell_16k.name=МЭ 16k Ячейка хранения эссенции
 item.thaumicenergistics.essentia_cell_64k.name=МЭ 64k Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_256k.name=МЭ 256k Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_1m.name=МЭ 1m Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_4m.name=МЭ 4m Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_16m.name=МЭ 16m Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_64m.name=МЭ 64m Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_256m.name=МЭ 256m Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_1g.name=МЭ 1g Ячейка хранения эссенции
+item.thaumicenergistics.essentia_cell_2g.name=МЭ 2g Ячейка хранения эссенции
 item.thaumicenergistics.essentia_cell_creative.name=Для творческаого режима МЭ Ячейка хранения эссенции
 
 item.thaumicenergistics.essentia_import.name=МЭ Шина импорта эссенции
@@ -128,6 +127,11 @@ research.essentiabuses.title=Шина эссенции
 research.essentiabuses.stage.1=Теперь, когда я могу оцифровать основы, пришло время применить эту технологию к работе.
 research.essentiabuses.stage.2=Теперь я могу сделать МЭ Шина экспорта и импорта эссеции, МЭ Шина хранения эссенции.
 
+# Research Essentia Level Emitter
+research.essentialevelemitter.title=Эмиттер уровня эссенции
+research.essentialevelemitter.stage.1=Мои Шины эссенции перемещают эссенцию в сеть и из неё без единого возражения, но делают это вслепую - у меня нет способа автоматически реагировать, когда конкретный аспект заканчивается или, наоборот, накапливается больше, чем мне нужно. Стоит применить принципы моего МЭ Эмиттера уровня к количеству эссенции вместо предметов.
+research.essentialevelemitter.stage.2=Эмиттер уровня эссенции отслеживает запас одного аспекта и подаёт сигнал редстоуна, как только тот пересекает установленный мной порог, сравнивая значение как больше или меньше - точно так же, как его аналог для предметов, только настроенный на эссенцию.
+
 # Research Essentia Terminal
 research.essentiaterminal.title=Монитор эссенции
 research.essentiaterminal.stage.1=Теперь, когда я могу оцифровать основы, пришло время применить эту технологию к работе.
@@ -137,6 +141,12 @@ research.essentiaterminal.stage.2=Теперь я могу сделать Тер
 research.infusionprovider.title=Поставщик наполнения эссенции
 research.infusionprovider.stage.1=Теперь, когда я могу оцифровать основы, пришло время применить эту технологию к работе.
 research.infusionprovider.stage.2=Теперь я могу сделать Поставщик наполнения эссенции.
+
+# Research Essentia Interface
+research.essentiainterface.title=Интерфейс эссенции
+research.essentiainterface.stage.1=Мне и правда пригодились эти эссенции-подсети - мой трюк с Поставщиком наполнения работает, но это хрупкая импровизация, держащаяся на Шине хранения эссенции, направленной на алтарь, который мне совсем не хочется разбирать на запчасти. Я хочу устройство, созданное именно для этой задачи: то, что позволит Шине хранения эссенции одной сети напрямую видеть другую, без алтаря Наполнения в роли невольного посредника.
+research.essentiainterface.stage.2=Интерфейс эссенции делает именно это. Направьте на него Шину хранения эссенции с любой стороны - и хранилища эссенции обеих сетей станут видны друг другу, соединённые напрямую. Он также способен принимать эссенцию прямо из банки или трубки и подавать её обратно, что делает его равноправным элементом как моей МЭ сети, так и всего мира эссенции.
+research.essentiainterface.addenda.1=Каждая грань настраивается независимо, и для этого не нужен никакой особый инструмент - сгодится то, что и так есть под рукой. Направив чары Перчатки призывателя на грань, я открываю её для приёма любого аспекта из трубки с этой стороны. Приложив вместо этого к грани флакон или кристалл с одним-единственным аспектом, я превращаю её в источник именно этого аспекта, подающий его наружу. Если я делаю это, присев на корточки, грань вместо этого отключается.
 
 # Research Arcane Crafting Terminal
 research.arcaneterminal.title=Arcane Crafting Terminal
