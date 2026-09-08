@@ -46,13 +46,25 @@ public class ItemEssentiaCell extends ItemBase
     private final String size;
     private final int bytes;
     private final int types;
+    private final int bytesPerType;
+    private final double idleDrain;
 
+    /**
+     * Backwards-compatible constructor for additional cell tiers. These cells historically used the
+     * base per-type byte/drain values; the tiered constructor above is used by the standard cells.
+     */
     public ItemEssentiaCell(String size, int bytes, int types) {
+        this(size, 0, bytes, types);
+    }
+
+    public ItemEssentiaCell(String size, int tier, int bytes, int types) {
         super("essentia_cell_" + size);
 
         this.size = size;
         this.bytes = bytes;
         this.types = types;
+        this.bytesPerType = 8 << (2 * tier); // 8, 32, 128, 512
+        this.idleDrain = 0.5 * (tier + 1); // 0.5, 1.0, 1.5, 2.0
 
         this.setMaxStackSize(1);
         this.setMaxDamage(0);
@@ -66,16 +78,22 @@ public class ItemEssentiaCell extends ItemBase
         if (!player.isSneaking()) return super.onItemRightClick(world, player, hand);
         ItemStack held = player.getHeldItem(hand);
         if (held.isEmpty()) return super.onItemRightClick(world, player, hand);
+        // Force the disassembly to run server-side only to prevent duplication
+        if (world.isRemote || player.inventory.getCurrentItem() != held)
+            return ActionResult.newResult(EnumActionResult.SUCCESS, held);
+
         ICellInventoryHandler<IAEEssentiaStack> handler =
                 AEApi.instance()
                         .registries()
                         .cell()
                         .getCellInventory(held, null, this.getChannel());
-        if (handler == null)
-            throw new NullPointerException("Couldn't get ICellInventoryHandler for Essentia Cell");
-        if (!handler.getAvailableItems(this.getChannel().createList())
-                .isEmpty()) // Only try to separate cell if empty
-        return super.onItemRightClick(world, player, hand);
+        if (handler == null) {
+            return ActionResult.newResult(EnumActionResult.SUCCESS, held);
+        }
+        if (!handler.getAvailableItems(this.getChannel().createList()).isEmpty()) {
+            // Only try to separate cell if empty
+            return super.onItemRightClick(world, player, hand);
+        }
 
         Optional<ItemStack> cellComponentOptional = this.getComponentOfCell(held);
         Optional<ItemStack> emptyCasingOptional =
@@ -88,14 +106,13 @@ public class ItemEssentiaCell extends ItemBase
         InventoryPlayer inv = player.inventory;
         InventoryAdaptor invAdaptor = InventoryAdaptor.getAdaptor(player);
 
-        if (hand == EnumHand.MAIN_HAND) // Prevent accidental deletion when in off hand
         inv.setInventorySlotContents(inv.currentItem, ItemStack.EMPTY);
 
         ItemStack cellRemainder = invAdaptor.addItems(cellComponent);
         if (!cellRemainder.isEmpty()) player.dropItem(cellRemainder, false);
 
         ItemStack casingRemainder = invAdaptor.addItems(emptyCasing);
-        if (!casingRemainder.isEmpty()) player.dropItem(emptyCasing, false);
+        if (!casingRemainder.isEmpty()) player.dropItem(casingRemainder, false);
 
         if (player.inventoryContainer != null) player.inventoryContainer.detectAndSendChanges();
 
@@ -107,8 +124,7 @@ public class ItemEssentiaCell extends ItemBase
         Preconditions.checkNotNull(stack.getItem());
         Preconditions.checkNotNull(stack.getItem().getRegistryName());
         Preconditions.checkNotNull(stack.getItem().getRegistryName().getPath());
-        String size = stack.getItem().getRegistryName().getPath().split("_")[2];
-        switch (size) {
+        switch (this.size) {
             case "1k":
                 return ThEApi.instance().items().essentiaComponent1k().maybeStack(1);
             case "4k":
@@ -118,7 +134,7 @@ public class ItemEssentiaCell extends ItemBase
             case "64k":
                 return ThEApi.instance().items().essentiaComponent64k().maybeStack(1);
             default:
-                return AdditionalEssentiaComponents.getComponentStack(size);
+                return AdditionalEssentiaComponents.getComponentStack(this.size);
         }
     }
 
@@ -140,7 +156,7 @@ public class ItemEssentiaCell extends ItemBase
 
     @Override
     public int getBytesPerType(ItemStack itemStack) {
-        return 8;
+        return this.bytesPerType;
     }
 
     @Override
@@ -165,7 +181,7 @@ public class ItemEssentiaCell extends ItemBase
 
     @Override
     public double getIdleDrain() {
-        return 1;
+        return this.idleDrain;
     }
 
     @Override
