@@ -220,6 +220,10 @@ public class AEUtil {
                 .createStack(new EssentiaStack(aspect, amount));
     }
 
+    public static IAEEssentiaStack getAEStackFromAspect(Aspect aspect, int amount) {
+        return getAEStackFromAspect(aspect, (long) amount);
+    }
+
     public static <T extends IAEStack<T>, C extends IStorageChannel<T>> C getStorageChannel(
             Class<C> clazz) {
         return AEApi.instance().storage().getStorageChannel(clazz);
