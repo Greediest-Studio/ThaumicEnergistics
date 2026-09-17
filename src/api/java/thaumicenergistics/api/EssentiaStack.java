@@ -14,6 +14,16 @@ public class EssentiaStack {
     private String aspect;
     private long amount;
 
+    /**
+     * Binary-compatibility overload for mods compiled against the pre-long API.
+     *
+     * <p>Do not remove when updating this class: third-party mods may invoke the exact {@code
+     * EssentiaStack(Aspect, int)} JVM signature at runtime.
+     */
+    public EssentiaStack(Aspect aspect, int amount) {
+        this(aspect, (long) amount);
+    }
+
     public EssentiaStack(Aspect aspect, long amount) {
         this(aspect != null ? aspect.getTag() : "", amount);
     }
